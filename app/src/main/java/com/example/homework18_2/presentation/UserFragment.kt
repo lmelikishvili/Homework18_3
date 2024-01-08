@@ -7,6 +7,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.homework18_2.databinding.FragmentUserBinding
+import com.example.homework18_2.domain.UserItem
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -16,6 +17,7 @@ class UserFragment : BaseFragment<FragmentUserBinding>(FragmentUserBinding::infl
     private val adapter: UsersRvAdapter by lazy {
         UsersRvAdapter()
     }
+    private var userList = mutableListOf<UserItem>()
     override fun setup() {
         viewModel.getUsers()
         viewModel.getUserDetails()
@@ -25,16 +27,23 @@ class UserFragment : BaseFragment<FragmentUserBinding>(FragmentUserBinding::infl
         }
     }
 
-    override fun setupListeners() {
 
+    override fun setupListeners() {
+        binding.btnDelete.setOnClickListener(){
+            //var newList =  listOf(userList.removeAt(2))
+            userList.removeAt(2)
+            //adapter.submitList(userList)
+            adapter.notifyDataSetChanged()
+        }
     }
 
     override fun bindData() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.userFlow.collect {
-                    adapter.submitList(it.data)
-                    d("itBody", "${it.data}")
+                    userList = it.data!!.toMutableList()
+                    adapter.submitList(userList)
+                    d("itBody", "$userList")
                 }
             }
         }
