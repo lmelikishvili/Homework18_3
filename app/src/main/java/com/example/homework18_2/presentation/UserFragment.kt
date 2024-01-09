@@ -18,9 +18,7 @@ class UserFragment : BaseFragment<FragmentUserBinding>(FragmentUserBinding::infl
     private val adapter: UsersRvAdapter by lazy {
         UsersRvAdapter()
     }
-    private val adapter2: DeleteUserAdapter by lazy {
-        DeleteUserAdapter()
-    }
+
     private var userList = mutableListOf<UserItem>()
     private var deleteUserList = mutableListOf<UserDetails>()
     override fun setup() {
