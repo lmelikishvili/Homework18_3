@@ -1,8 +1,8 @@
 package com.example.homework18_2.data
 
-import com.example.homework18_2.presentation.UserDetails
+import com.example.homework18_2.domain.UserDetails
 
-fun UserDetailsDto.toDomain(): UserDetails{
+fun UserDetailsDto.toDomain(): UserDetails {
     return UserDetails(
         data, support
     )

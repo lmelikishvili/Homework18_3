@@ -7,6 +7,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.homework18_2.databinding.FragmentUserBinding
+import com.example.homework18_2.domain.UserDetails
 import com.example.homework18_2.domain.UserItem
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -17,7 +18,11 @@ class UserFragment : BaseFragment<FragmentUserBinding>(FragmentUserBinding::infl
     private val adapter: UsersRvAdapter by lazy {
         UsersRvAdapter()
     }
+    private val adapter2: DeleteUserAdapter by lazy {
+        DeleteUserAdapter()
+    }
     private var userList = mutableListOf<UserItem>()
+    private var deleteUserList = mutableListOf<UserDetails>()
     override fun setup() {
         viewModel.getUsers()
         viewModel.getUserDetails()
@@ -30,10 +35,16 @@ class UserFragment : BaseFragment<FragmentUserBinding>(FragmentUserBinding::infl
 
     override fun setupListeners() {
         binding.btnDelete.setOnClickListener(){
-            //var newList =  listOf(userList.removeAt(2))
-            userList.removeAt(2)
-            //adapter.submitList(userList)
-            adapter.notifyDataSetChanged()
+            viewModel.deleteUser()
+            viewLifecycleOwner.lifecycleScope.launch {
+                repeatOnLifecycle(Lifecycle.State.STARTED) {
+                    viewModel.deleteUserFlow.collect {
+                        userList = it.toMutableList()
+                        adapter.submitList(userList)
+                        d("deleteUserFlowBody2", "$userList")
+                    }
+                }
+            }
         }
     }
 

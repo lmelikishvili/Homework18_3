@@ -9,4 +9,7 @@ interface UserService {
 
     @GET("https://reqres.in/api/users/7")
     suspend fun getUserDetails(): Response<UserDetailsDto>
+
+    @GET("https://reqres.in/api/users/7")
+    suspend fun deleteUser(): Response<UserDetailsDto>
 }
